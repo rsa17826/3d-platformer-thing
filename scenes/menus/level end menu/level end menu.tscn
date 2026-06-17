@@ -1,0 +1,42 @@
+[gd_scene load_steps=4 format=3 uid="uid://y5syvc6geyqj"]
+
+[ext_resource type="Script" path="res://scenes/menus/level end menu/level end menu.gd" id="1_d6s4y"]
+[ext_resource type="LabelSettings" uid="uid://bgv5pfahfxcev" path="res://scenes/text style/level end menu.tres" id="2_0qqby"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_42f8o"]
+font_size = 51
+font_color = Color(0.359069, 0.359069, 0.359069, 1)
+shadow_color = Color(0, 0, 0, 1)
+
+[node name="CenterContainer" type="CenterContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_d6s4y")
+
+[node name="vbox" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="timertext" type="Label" parent="vbox"]
+layout_mode = 2
+text = "TIME: 01:11:56"
+label_settings = SubResource("LabelSettings_42f8o")
+uppercase = true
+metadata/_edit_lock_ = true
+
+[node name="restarttext" type="Label" parent="vbox"]
+layout_mode = 2
+text = "press f to restart"
+label_settings = ExtResource("2_0qqby")
+uppercase = true
+metadata/_edit_lock_ = true
+
+[node name="continuetext" type="Label" parent="vbox"]
+layout_mode = 2
+text = "press space to continue"
+label_settings = ExtResource("2_0qqby")
+uppercase = true
+metadata/_edit_lock_ = true

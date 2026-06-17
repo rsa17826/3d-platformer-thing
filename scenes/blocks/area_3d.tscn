@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3 uid="uid://c8fthwe3vp1yt"]
+
+[ext_resource type="Script" path="res://scenes/blocks/key.gd" id="1_t6upr"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_ymn8b"]
+radius = 1.5
+
+[node name="area3d" type="Area3D"]
+collision_layer = 5
+collision_mask = 5
+priority = 20
+script = ExtResource("1_t6upr")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_ymn8b")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

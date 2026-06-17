@@ -1,0 +1,42 @@
+[gd_scene load_steps=2 format=3 uid="uid://0f4jvws0q0l4"]
+
+[ext_resource type="Script" path="res://scenes/menus/main menu/load_level_button.gd" id="1_q63bo"]
+
+[node name="main menu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="levels" type="HFlowContainer" parent="CenterContainer"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="CenterContainer/levels"]
+layout_mode = 2
+text = "level 1"
+script = ExtResource("1_q63bo")
+
+[node name="Button2" type="Button" parent="CenterContainer/levels"]
+layout_mode = 2
+text = "level 2"
+script = ExtResource("1_q63bo")
+
+[node name="Button3" type="Button" parent="CenterContainer/levels"]
+layout_mode = 2
+text = "level 3"
+script = ExtResource("1_q63bo")
+
+[connection signal="pressed" from="CenterContainer/levels/Button" to="CenterContainer/levels/Button" method="_on_pressed"]
+[connection signal="pressed" from="CenterContainer/levels/Button2" to="CenterContainer/levels/Button2" method="_on_pressed"]
+[connection signal="pressed" from="CenterContainer/levels/Button3" to="CenterContainer/levels/Button3" method="_on_pressed"]

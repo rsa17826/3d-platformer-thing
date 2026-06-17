@@ -1,0 +1,129 @@
+[gd_scene load_steps=15 format=3 uid="uid://d3ewmha1t0srl"]
+
+[ext_resource type="Script" path="res://scenes/player/player.gd" id="1_3f8nb"]
+[ext_resource type="PackedScene" uid="uid://cqsenv4jqmlyn" path="res://scenes/powers/cards.tscn" id="2_my8ai"]
+[ext_resource type="Script" path="res://scenes/powers/card_icons.gd" id="3_don62"]
+[ext_resource type="Script" path="res://scenes/player/ui/debugui.gd" id="4_5qxw0"]
+[ext_resource type="Script" path="res://scenes/player/ui/distance_ray.gd" id="5_d5r0k"]
+[ext_resource type="PackedScene" uid="uid://iwlpamd20oko" path="res://addons/customizableCrosshair/crosshair/crosshair.tscn" id="5_po51j"]
+[ext_resource type="Script" path="res://scenes/player/ui/distance ui.gd" id="7_m60d1"]
+[ext_resource type="Texture2D" uid="uid://b3b5s17pkppgh" path="res://images/circle bg.png" id="7_nqvs7"]
+[ext_resource type="Texture2D" uid="uid://dw7vhalvmx0av" path="res://images/circle fg.png" id="9_5user"]
+[ext_resource type="PackedScene" uid="uid://bdvdf5v87mmrr" path="res://addons/maaacks_options_menus/examples/scenes/menus/options_menu/master_options_menu_with_tabs.tscn" id="10_b6ldt"]
+[ext_resource type="PackedScene" uid="uid://gqiqvycyr51x" path="res://scenes/menus/pre level menu/pre level menu.tscn" id="10_e4o80"]
+[ext_resource type="Script" path="res://scenes/player/ui/prevtime.gd" id="10_xek57"]
+[ext_resource type="Script" path="res://scenes/player/ui/timer.gd" id="11_se0sd"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_hwthb"]
+height = 1.95
+
+[node name="player" type="CharacterBody3D" groups=["player"]]
+script = ExtResource("1_3f8nb")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+shape = SubResource("CylinderShape3D_hwthb")
+
+[node name="cam" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.522908, 0)
+current = true
+fov = 103.189
+
+[node name="powers" parent="cam" instance=ExtResource("2_my8ai")]
+transform = Transform3D(0.0419236, -0.0178983, 0.153369, 0.0166609, 0.158518, 0.0139449, -0.153508, 0.0123165, 0.0433991, 0.884, -0.387, -0.826)
+script = ExtResource("3_don62")
+default_icon = 0
+
+[node name="debug ui" type="Node3D" parent="cam"]
+
+[node name="TextEdit" type="TextEdit" parent="cam/debug ui"]
+offset_right = 625.0
+offset_bottom = 496.0
+scale = Vector2(0.858081, 0.765429)
+text = "asdasd"
+script = ExtResource("4_5qxw0")
+
+[node name="RayCast3D" type="RayCast3D" parent="cam"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 0, 0)
+visible = false
+target_position = Vector3(0, -40, 0)
+collision_mask = 3
+debug_shape_custom_color = Color(0.468756, 0.24309, 0.324736, 1)
+script = ExtResource("5_d5r0k")
+
+[node name="fake_cam" type="Node3D" parent="."]
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+light_color = Color(0.687159, 0.841671, 0.951543, 1)
+light_energy = 2.304
+omni_range = 4096.0
+
+[node name="Crosshair" parent="." instance=ExtResource("5_po51j")]
+crosshairSize = 9.525
+crosshairGap = 4.54
+crosshairColor = Color(0.629653, 0.760272, 0.831797, 1)
+
+[node name="center" type="CenterContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="distance ui" type="Control" parent="center"]
+visible = false
+layout_mode = 2
+script = ExtResource("7_m60d1")
+
+[node name="distdisp" type="Label" parent="center/distance ui"]
+layout_mode = 0
+offset_left = -40.0
+offset_top = -44.0
+offset_right = 40.0
+offset_bottom = -20.0
+text = "asd"
+horizontal_alignment = 1
+uppercase = true
+
+[node name="circlebg" type="TextureRect" parent="center/distance ui"]
+layout_mode = 0
+texture = ExtResource("7_nqvs7")
+expand_mode = 1
+
+[node name="circlefg" type="TextureRect" parent="center/distance ui"]
+layout_mode = 0
+texture = ExtResource("9_5user")
+expand_mode = 1
+
+[node name="top center" type="CenterContainer" parent="."]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -21.5
+offset_right = 21.5
+offset_bottom = 23.0
+grow_horizontal = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="top center"]
+layout_mode = 2
+
+[node name="prevtime" type="Label" parent="top center/VBoxContainer"]
+layout_mode = 2
+text = "timer"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("10_xek57")
+
+[node name="timer" type="Label" parent="top center/VBoxContainer"]
+layout_mode = 2
+text = "timer"
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("11_se0sd")
+
+[node name="prelevelmenu" parent="." instance=ExtResource("10_e4o80")]
+visible = false
+
+[node name="menu" parent="." instance=ExtResource("10_b6ldt")]
+visible = false
