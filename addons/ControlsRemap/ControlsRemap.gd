@@ -33,16 +33,16 @@ func create_remap():
     _joypad_remap.clear()
     var keyboard_actions: Dictionary
     var joypad_actions: Dictionary
-    
+
     for action in action_list:
         _map_input(keyboard_actions, action, get_action_key(action))
         _map_input(joypad_actions, action, get_action_button(action))
-    
+
     for action in action_list:
         if action in keyboard_actions and action in _default_keyboard:
             if keyboard_actions[action] != _default_keyboard[action]:
                 _keyboard_remap[action] = keyboard_actions[action]
-        
+
         if action in joypad_actions and action in _default_joypad:
             if joypad_actions[action] != _default_joypad[action]:
                 _joypad_remap[action] = joypad_actions[action]
@@ -107,36 +107,33 @@ func get_action_button(action: String) -> InputEventJoypadButton:
 ## Returns an array of action names that have assigned conflicting input events.
 func find_duplicates() -> Array[String]:
     var dupes: Array[String]
-    
+
     for action in action_list:
         var key1 := get_action_key(action)
         if key1:
             for action2 in action_list:
-                if action == action2:
-                    continue
-                
+                if action == action2: continue
+
                 var key2 := get_action_key(action2)
                 if key2:
                     if key1.scancode == key2.scancode:
                         dupes.append(action)
                         break
-    
+
     for action in action_list:
-        if action in dupes:
-            continue
-        
+        if action in dupes: continue
+
         var button1 := get_action_button(action)
         if button1:
             for action2 in action_list:
-                if action == action2:
-                    continue
-                
+                if action == action2: continue
+
                 var button2 := get_action_button(action2)
                 if button2:
                     if button1.button_index == button2.button_index:
                         dupes.append(action)
                         break
-    
+
     return dupes
 
 func _load_defaults():
@@ -151,9 +148,8 @@ func _map_input(map: Dictionary, action: String, input):
         map[action] = input.button_index
 
 func _demap_input(map: Dictionary, action: String, input):
-    if not action in map:
-        return
-    
+    if not action in map: return
+
     if input is InputEventKey:
         input.keycode = map[action]
     elif input is InputEventJoypadButton:

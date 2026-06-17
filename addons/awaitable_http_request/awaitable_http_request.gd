@@ -22,7 +22,7 @@ var is_requesting := false  ## Whether the node is busy performing a request. Th
 ##         print(resp.headers["content-type"])  # application/json
 ##
 ##         var json := resp.body_as_json()
-##         print(json["login"])                 # Swarkin
+##         print(json.login)                 # Swarkin
 ## [/codeblock]
 func async_request(url: String, custom_headers := PackedStringArray(), method := HTTPClient.Method.METHOD_GET, request_data := "") -> HTTPResult:
     if is_requesting:

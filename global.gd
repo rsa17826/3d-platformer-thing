@@ -26,7 +26,7 @@ var level: int
 var targetdist: float = INF
 
 func same(x, y):
-  return typeof(x) == typeof(y) && x == y
+  return typeof(x) == typeof(y) and x == y
 
 func join(joiner="", a="HDSJAKHADSJKASHDHDSJKASDHJDSAKHASJKD", s="HDSJAKHADSJKASHDHDSJKASDHJDSAKHASJKD", d="HDSJAKHADSJKASHDHDSJKASDHJDSAKHASJKD", f="HDSJAKHADSJKASHDHDSJKASDHJDSAKHASJKD", g="HDSJAKHADSJKASHDHDSJKASDHJDSAKHASJKD", h="HDSJAKHADSJKASHDHDSJKASDHJDSAKHASJKD", j="HDSJAKHADSJKASHDHDSJKASDHJDSAKHASJKD", k="HDSJAKHADSJKASHDHDSJKASDHJDSAKHASJKD", l="HDSJAKHADSJKASHDHDSJKASDHJDSAKHASJKD", z="HDSJAKHADSJKASHDHDSJKASDHJDSAKHASJKD", x="HDSJAKHADSJKASHDHDSJKASDHJDSAKHASJKD", c="HDSJAKHADSJKASHDHDSJKASDHJDSAKHASJKD", v="HDSJAKHADSJKASHDHDSJKASDHJDSAKHASJKD", b="HDSJAKHADSJKASHDHDSJKASDHJDSAKHASJKD", n="HDSJAKHADSJKASHDHDSJKASDHJDSAKHASJKD", m="HDSJAKHADSJKASHDHDSJKASDHJDSAKHASJKD", q="HDSJAKHADSJKASHDHDSJKASDHJDSAKHASJKD", w="HDSJAKHADSJKASHDHDSJKASDHJDSAKHASJKD", e="HDSJAKHADSJKASHDHDSJKASDHJDSAKHASJKD", r="HDSJAKHADSJKASHDHDSJKASDHJDSAKHASJKD", t="HDSJAKHADSJKASHDHDSJKASDHJDSAKHASJKD", y="HDSJAKHADSJKASHDHDSJKASDHJDSAKHASJKD", u="HDSJAKHADSJKASHDHDSJKASDHJDSAKHASJKD", i="HDSJAKHADSJKASHDHDSJKASDHJDSAKHASJKD", o="HDSJAKHADSJKASHDHDSJKASDHJDSAKHASJKD", p="HDSJAKHADSJKASHDHDSJKASDHJDSAKHASJKD"):
   var temparr = [a, s, d, f, g, h, j, k, l, z, x, c, v, b, n, m, q, w, e, r, t, y, u, i, o, p]
@@ -55,11 +55,11 @@ class timer:
 
 func debuguistart():
   event.trigger("debugui start")
-  
+
 func debuguiclear():
   if event.triggers.has("debugui clear"):
     event.trigger("debugui clear")
-    
+
 func debuguiadd(name, val):
   if event.triggers.has("debugui add"):
     event.trigger("debugui add", name, val)
@@ -101,8 +101,7 @@ class arr:
   static func getcount(array, count):
     var newarr = []
     for i in range(count):
-      if array.size() == 0:
-        return null
+      if array.size() == 0: return null
       newarr.append(array[0])
       array.remove_at(0)
     return newarr
@@ -134,8 +133,7 @@ class event:
       if len(triggers[msg]) <= i:
         log.error(triggers[msg], 'cant remove ' + str(i) + ' from ' + msg + ' because ' + str(i) + ' doesnt exist in ' + msg)
         return
-      triggers[msg][i] = func() -> void:
-        pass
+      triggers[msg][i] = func() -> void: pass
   static func on(msg: String, cb: Callable) -> Dictionary:
     if !msg in triggers:
       triggers[msg] = []

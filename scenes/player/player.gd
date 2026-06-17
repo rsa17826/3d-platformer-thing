@@ -24,16 +24,13 @@ func ends_with(x, y):
 
 func _process(_delta):
   MOUSE_SENSITIVITY = float((Config.get_config("InputSettings", "MouseSensitivity", 3))) / 1000
-  if inmenu || inbeforelevelstart:
-    return
+  if inmenu or inbeforelevelstart: return
   if !global.timer.time:
-    if Input.is_action_just_pressed("next level"):
-      return
+    if Input.is_action_just_pressed("next level"): return
   var point = position
   point.y -= 1
   var temp = global.map.get_cell_item(global.map.local_to_map(point))
-  if temp == -1:
-    return
+  if temp == -1: return
   if is_on_floor():
     blockunderplayer = temp
 
@@ -85,7 +82,6 @@ func _ready() -> void:
   global.timer.reset()
   # global.debuguistart()
 
-    
 func power_got():
   if global.player_ability == global.abilities.extrajump:
     kt = MAX_KT
@@ -102,7 +98,7 @@ const cardtscn = preload("res://scenes/powers/cards.tscn")
 
 
 func _input(event):
-  if Input.is_action_just_pressed("throw card") && global.player_ability != global.abilities.none:
+  if Input.is_action_just_pressed("throw card") and global.player_ability != global.abilities.none:
     var newcard = cardtscn.instantiate()
     # newcard.add_to_group("thrown")
     newcard.isthrown = true
@@ -117,7 +113,7 @@ func _input(event):
     global.player_ability = global.abilities.none
     global.event.trigger("power got")
 
-  if Input.is_action_just_pressed("replay level") && !inmenu:
+  if Input.is_action_just_pressed("replay level") and !inmenu:
     if inbeforelevelstart:
       Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
       get_tree().change_scene_to_file.call_deferred("res://addons/maaacks_options_menus/examples/scenes/menus/options_menu/master_options_menu_with_tabs.tscn")
@@ -133,7 +129,7 @@ func _input(event):
       # get_tree().change_scene_to_file.call_deferred("res://addons/maaacks_options_menus/examples/scenes/menus/options_menu/master_options_menu_with_tabs.tscn")
       $prelevelmenu.visible = false
       inbeforelevelstart = false
-    if inmenu && !inbeforelevelstart:
+    if inmenu and !inbeforelevelstart:
       $menu.visible = false
       Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
       inmenu = false
@@ -144,9 +140,9 @@ func _input(event):
       inmenu = true
       global.timer.stop()
 
-  if event is InputEventMouseButton && !$menu.visible && !inbeforelevelstart:
+  if event is InputEventMouseButton and !$menu.visible and !inbeforelevelstart:
     Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-  if event is InputEventMouseMotion && !$menu.visible && !inbeforelevelstart:
+  if event is InputEventMouseMotion and !$menu.visible and !inbeforelevelstart:
     $cam.rotation.y += -event.relative.x * MOUSE_SENSITIVITY
     $cam.rotation.x += -event.relative.y * MOUSE_SENSITIVITY
     var cap := 89.99
@@ -159,11 +155,9 @@ func _input(event):
 
 
 func _physics_process(delta: float) -> void:
-  if inmenu || inbeforelevelstart:
-    return
+  if inmenu or inbeforelevelstart: return
   if !global.timer.time:
-    if Input.is_action_just_pressed("next level"):
-      return
+    if Input.is_action_just_pressed("next level"): return
     global.timer.start()
   global.debuguiclear()
   var has2 = []
@@ -180,10 +174,10 @@ func _physics_process(delta: float) -> void:
     speed.user.y -= gravity * delta
     if kt > 0:
       kt -= 60 * delta
-    if jumps == MAX_JUMPS && kt <= 0:
+    if jumps == MAX_JUMPS and kt <= 0:
       jumps = MAX_JUMPS - 1
   if dashcd > 0:
-    if dashcd > 1 || is_on_floor():
+    if dashcd > 1 or is_on_floor():
       dashcd -= 60 * delta
 
   if pressed("jump") and jumps > 0:
@@ -196,7 +190,7 @@ func _physics_process(delta: float) -> void:
         speed.user.y = JUMP_SPEED
         unpress("jump")
         jumps -= 1
-        
+
 
   # if boosting <= 0:
   var input_dir := Input.get_vector("left", "right", "forward", "back")
@@ -212,7 +206,7 @@ func _physics_process(delta: float) -> void:
     speed.user.x = move_toward(speed.user.x, 0, CURRENT_USER_MOVE_SPEED / 5)
     speed.user.z = move_toward(speed.user.z, 0, CURRENT_USER_MOVE_SPEED / 5)
 
-  if candash && pressed("dash") && dashcd == 0:
+  if candash and pressed("dash") and dashcd == 0:
     dashing = DASH_FOR_FRAMES
     dashcd = MAXDASHCD
     tempstorage.predashvel = speed.user
@@ -241,7 +235,7 @@ func _physics_process(delta: float) -> void:
   global.debuguiadd("dashcd", dashcd)
   global.debuguiadd("position", position)
   global.debuguiadd("inbeforelevelstart", inbeforelevelstart)
-  global.debuguiadd("jumpiung", trypress["jump"])
+  global.debuguiadd("jumpiung", trypress.jump)
   global.debuguiadd("global.level", global.level)
   # global.debuguiadd("boosting", boosting)
   # log.pp(speed.dash)
@@ -252,9 +246,9 @@ func updatetrypress(has2: Array, delta):
     if trypress[thing] > 0:
       trypress[thing] -= 60 * delta
     if thing in has2:
-      if Input.is_action_just_pressed(thing) || Input.is_action_just_pressed(thing + '2'):
+      if Input.is_action_just_pressed(thing) or Input.is_action_just_pressed(thing + '2'):
         trypress[thing] = KEY_MAX_BUFFER
-      if !(Input.is_action_pressed(thing) || Input.is_action_pressed(thing + '2')):
+      if !(Input.is_action_pressed(thing) or Input.is_action_pressed(thing + '2')):
         trypress[thing] = 0
       if Input.is_action_just_released(thing):
         trypress[thing] = 0
@@ -267,7 +261,7 @@ func updatetrypress(has2: Array, delta):
         trypress[thing] = 0
       if Input.is_action_just_released(thing):
         trypress[thing] = 0
-      # if Input.is_action_just_pressed(thing) || Input.is_action_just_pressed(thing + '2'):
+      # if Input.is_action_just_pressed(thing) or Input.is_action_just_pressed(thing + '2'):
       #   trypress[thing] = true
-      # if !(Input.is_action_pressed(thing) || Input.is_action_pressed(thing + '2')):
+      # if !(Input.is_action_pressed(thing) or Input.is_action_pressed(thing + '2')):
       #   trypress[thing] = false

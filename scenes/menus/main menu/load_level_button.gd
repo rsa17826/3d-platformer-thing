@@ -1,6 +1,14 @@
+@tool
 extends Button
 
-var levelnumber := 0
+@export var levelnumber := 0:
+  set(val):
+    levelnumber = val
+    setText()
+func _init():
+  setText()
+func setText():
+  text = "level " + str(levelnumber)
 
 func _on_pressed():
   global.level = int(levelnumber)

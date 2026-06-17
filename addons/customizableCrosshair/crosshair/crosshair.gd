@@ -84,12 +84,12 @@ func valid_config(config: Dictionary) -> bool:
     if config.size() != crosshairConfig.size():
         push_warning("Config validation failed due to size mismatch.")
         return false
-    
+
     # Check if there are any missing entries
     if not config.has_all(crosshairConfig.keys()):
         push_warning("Config validation failed due to key mismatch.")
         return false
-    
+
     # Check if there is a value type mismatch
     for value in config:
         if typeof(config[value]) != typeof(crosshairConfig[value]):
@@ -103,22 +103,22 @@ func valid_config(config: Dictionary) -> bool:
                 + "'."
             )
             return false
-    
+
     return true
 
 
 # Converts the config dictionary to a JSON string
 func get_config_string() -> String:
     var dict: Dictionary = crosshairConfig.duplicate()
-    
+
     # Serialize crosshair color for JSON
-    dict["color"] = [
-        dict["color"].r,
-        dict["color"].g,
-        dict["color"].b,
-        dict["color"].a
+    dict.color = [
+        dict.color.r,
+        dict.color.g,
+        dict.color.b,
+        dict.color.a
     ]
-    
+
     var string = JSON.stringify(dict, "", false)
     return string
 
@@ -126,23 +126,23 @@ func get_config_string() -> String:
 # Convert the JSON string form of the config to a dictionary
 func parse_config_string(configString: String) -> void:
     var config = JSON.parse_string(configString)
-    
+
     # Check if the parse failed
     if config == null:
         print("Incorrect config string!")
         return
-    
+
     # Deserialize crosshair color
-    config["color"] = Color(
-        config["color"][0],
-        config["color"][1],
-        config["color"][2],
-        config["color"][3]
+    config.color = Color(
+        config.color[0],
+        config.color[1],
+        config.color[2],
+        config.color[3]
     )
-    
+
     # Convert line style back to int
-    config["lineStyle"] = type_convert(config["lineStyle"], 2)
-    
+    config.lineStyle = type_convert(config.lineStyle, 2)
+
     get_crosshair_settings(config)
 
 
@@ -150,21 +150,21 @@ func parse_config_string(configString: String) -> void:
 func get_crosshair_settings(config: Dictionary) -> void:
     # Check if the received dictionary is correct
     if valid_config(config):
-        crosshairThickness = config["thickness"]
-        crosshairSize = config["size"]
-        crosshairGap = config["gap"]
-        crosshairColor = config["color"]
-        crosshairLineStyle = config["lineStyle"]
-        crosshairDot = config["dot"]
-        crosshairTStyle = config["tStyle"]
-        crosshairOutline = config["outline"]
-        crosshairOutlineThickness = config["outlineThickness"]
-        crosshairHorizontalLines = config["horizontalLines"]
-        crosshairHorizontalLinesPosition = config["horizontalLinesPosition"]
-        crosshairHorizontalLinesThickness = config["horizontalLinesThickness"]
-        crosshairHorizontalLinesLength = config["horizontalLinesLength"]
-        crosshairDynamic = config["dynamic"]
-        crosshairMaxDynamicOffset = config["maxDynamicOffset"]
+        crosshairThickness = config.thickness
+        crosshairSize = config.size
+        crosshairGap = config.gap
+        crosshairColor = config.color
+        crosshairLineStyle = config.lineStyle
+        crosshairDot = config.dot
+        crosshairTStyle = config.tStyle
+        crosshairOutline = config.outline
+        crosshairOutlineThickness = config.outlineThickness
+        crosshairHorizontalLines = config.horizontalLines
+        crosshairHorizontalLinesPosition = config.horizontalLinesPosition
+        crosshairHorizontalLinesThickness = config.horizontalLinesThickness
+        crosshairHorizontalLinesLength = config.horizontalLinesLength
+        crosshairDynamic = config.dynamic
+        crosshairMaxDynamicOffset = config.maxDynamicOffset
         update_crosshair()
     else:
         push_warning("Invalid config.")
@@ -190,8 +190,7 @@ func update_static_offset(amount: float) -> void:
 # Select the curve for the corresponding style
 func update_line_style(style: int):
     match style:
-        0:
-            return null
+        0: return null
         1:
             return preload(
                 "res://addons/customizableCrosshair/crosshair/curves/arrow.tres"
@@ -200,8 +199,7 @@ func update_line_style(style: int):
             return preload(
                 "res://addons/customizableCrosshair/crosshair/curves/inverseArrow.tres"
             )
-        _:
-            return null
+        _: return null
 
 
 # Updates the values of the config dictionary
@@ -223,7 +221,7 @@ func update_crosshair_config() -> void:
         "dynamic": crosshairDynamic,
         "maxDynamicOffset": crosshairMaxDynamicOffset
     }
-    
+
 
 
 # Used to update the crosshairs looks
@@ -231,11 +229,11 @@ func update_crosshair() -> void:
     var i: int = 0
     var lines: Array = get_children()
     var crosshairOffset: float = crosshairGap
-    
+
     # Apply the static offset to the crosshair if dynamic crosshair is enabled
     if crosshairDynamic:
         crosshairOffset += crosshairStaticOffset
-    
+
     # Determine if the crosshair values should be used
     # or the user defined ones for the horizontal lines
     var offset: float =\
@@ -247,7 +245,7 @@ func update_crosshair() -> void:
     var horizontalLineThickness: float =\
         crosshairThickness if crosshairHorizontalLinesThickness == 0\
         else crosshairHorizontalLinesThickness
-    
+
     var horizontalLineOffset: float = crosshairOffset + (thickness / 2)
     var horizontalLinePoint: float = (offset + crosshairThickness) / 2
     # Array of the start point and end point vectors of each horizontal line
@@ -261,11 +259,11 @@ func update_crosshair() -> void:
         Vector2(horizontalLineOffset, horizontalLinePoint), # Right start
         Vector2(horizontalLineOffset, -horizontalLinePoint) # Right end
     ]
-    
+
     # Apply an extra offset to the crosshair lines when the horizontal lines are enabled
     if crosshairHorizontalLines:
         crosshairOffset += crosshairThickness / 2
-    
+
     var lineStartPoint: float = crosshairOffset + (crosshairThickness / 2)
     var lineEndPoint: float =\
         crosshairSize + crosshairOffset + (crosshairThickness / 2)
@@ -280,10 +278,10 @@ func update_crosshair() -> void:
         Vector2(lineStartPoint, 0.0), # Right start
         Vector2(lineEndPoint, 0.0) # Right end
     ]
-    
+
     # Used to determine if crosshairOffset is negative or positive
     var dir: int = sign(crosshairOffset)
-    
+
     # Used to get the direction of the horizontal lines
     var horizontalLineOutlineDirections: PackedVector2Array = [
         Vector2(-dir, 0), # Top start
@@ -295,20 +293,20 @@ func update_crosshair() -> void:
         Vector2(0, dir), # Right start
         Vector2(0, -dir) # Right end
     ]
-    
+
     # Make the top line invisible if T-Style is enabled
     if crosshairTStyle:
         TopLineRef.visible = false
     else:
         TopLineRef.visible = true
-    
+
     # Apply the configurations to the lines
     for LineRef in lines:
         LineRef.points = linePoints.slice(i, i + 2)
         LineRef.width = crosshairThickness
         LineRef.default_color = crosshairColor
         LineRef.width_curve = update_line_style(crosshairLineStyle)
-        
+
         # Apply the configurations to the outline lines
         if crosshairOutline:
             var OutlineRef: Line2D = LineRef.get_child(0)
@@ -324,7 +322,7 @@ func update_crosshair() -> void:
             OutlineRef.width_curve = update_line_style(crosshairLineStyle)
         else:
             LineRef.get_child(0).set_visible(false)
-        
+
         # Apply the configurations to the horizontal lines
         if crosshairHorizontalLines:
             var HorizontalLineRef: Line2D = LineRef.get_child(1)
@@ -332,7 +330,7 @@ func update_crosshair() -> void:
             HorizontalLineRef.points = horizontalLinePoints.slice(i, i + 2)
             HorizontalLineRef.width = horizontalLineThickness
             HorizontalLineRef.default_color = crosshairColor
-            
+
             # Apply the configurations to the outline lines
             if crosshairOutline:
                 var OutlineRef: Line2D = HorizontalLineRef.get_child(0)
@@ -349,20 +347,20 @@ func update_crosshair() -> void:
                 HorizontalLineRef.get_child(0).set_visible(false)
         else:
             LineRef.get_child(1).set_visible(false)
-        
+
         # Itterate to the next line
         i += 2
-    
+
     # Queue a redraw for the center dot
     queue_redraw()
-    
+
     # Update the values of the config dictionary
     update_crosshair_config()
 
 
 func _draw() -> void:
     # Draw a square behind the actual dot to be used as an outline
-    if crosshairOutline && crosshairDot:
+    if crosshairOutline and crosshairDot:
         draw_rect(
             Rect2(
                 -(crosshairThickness / 2 + crosshairOutlineThickness),
@@ -372,7 +370,7 @@ func _draw() -> void:
             ),
             Color.BLACK
         )
-    
+
     # Draw a square in the middle of the screen
     if crosshairDot:
         draw_rect(

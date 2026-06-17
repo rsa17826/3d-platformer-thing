@@ -21,7 +21,7 @@ enum STROKE_TYPE { OUTLINE, INNER, OUTER }
 @export                                var slots_offset: int = 0
 @export_group('Base Circle')
 @export                                var circle_offset := Vector2.ZERO
-@export                                var color := Color(0,0,0, 0.3) 
+@export                                var color := Color(0,0,0, 0.3)
 @export_range(0, 1024, 1)            var circle_radius: int = 384
 @export                                var set_auto_radius := false:        set = _set_auto_radius
 
@@ -147,12 +147,12 @@ func get_width_by_stroke_type(width: float, type: STROKE_TYPE) -> float:
 
 func draw_child(i: int, radial_position_offset := Vector2.ZERO) -> void:
     var children: Array[Control] = []
-    
+
     for v: Node in get_children():
         if v.is_class(&'Control') and v.visible:
             children.append(v)
-    
-    
+
+
     var child: Control = (children[i] if i <= children.size() else null)
     if child != null:
         if child_count == 1:
@@ -160,22 +160,22 @@ func draw_child(i: int, radial_position_offset := Vector2.ZERO) -> void:
                 radial_position_offset = Vector2(0, radius / 2.0)
             else:
                 radial_position_offset = Vector2.ZERO
-        
+
         var factor := 1.0
-        
+
         if children_auto_sizing:
             factor = (radius / (children_size * 1.5)) * children_auto_sizing_factor
-        
-        
+
+
         child._set_size.call_deferred(Vector2.ONE * children_size * factor)
         child.position = (offset - (child.size / 2.0)) + radial_position_offset + children_offset
         if child.has_meta('radial_offset'):
             child.position += child.get_meta('radial_offset', Vector2.ZERO)
         #if children_offsets_array.size() - 1 >= i:
             #child.position += children_offsets_array[i]
-        
+
         child.pivot_offset = child.size / 2.0
-        
+
         if children_rotate:
             child.rotation_degrees = 360 - (360 * int(i / float(child_count)))
 
@@ -183,14 +183,14 @@ func draw_child(i: int, radial_position_offset := Vector2.ZERO) -> void:
 
 func _draw() -> void:
     offset = (size / 2.0) + circle_offset
-    
+
     var smallest_height := int(size.y / 2.0)
     if (size.x / 2.0) < smallest_height:
         smallest_height = (size.x / 2.0)
-    
+
     radius = smallest_height
-    
-    
+
+
     if auto_sizing:
         if radius <= smallest_height:
             radius = smallest_height
@@ -198,62 +198,62 @@ func _draw() -> void:
             radius = smallest_height
     else:
         radius = circle_radius
-    
-    
-    
-    
+
+
+
+
     draw_circle(offset, radius, color)
-    
+
     if (selection == -1 and first_in_center):
         draw_circle(offset, arc_inner_radius, hover_color)
-    
-    
-    
-    
+
+
+
+
     child_count = 0
     for v: Node in get_children():
         if v.is_class(&'Control') and v.visible:
             child_count += 1
-    
+
     if first_in_center and (child_count > 0):
         child_count -= 1
-    
+
     line_rotation_offset = ((360 / float(child_count)) * slots_offset) + line_rotation_offset_default
-    
+
     rads_offset = 0.0
     if ROT_OFFSETS.has(child_count):
         rads_offset = ROT_OFFSETS[child_count]
-    
-    
-    
-    
+
+
+
+
     if child_count > 0:
         for i: int in child_count:
             var rads := (TAU * i / child_count)
             rads += rads_offset + deg_to_rad(line_rotation_offset)
             i += 1
-            
-            
+
+
             var starts_rads: float = ((TAU * (i - 1)) / child_count) - rads_offset - deg_to_rad(line_rotation_offset)
             var ends_rads: float = ((TAU * i) / child_count) - rads_offset - deg_to_rad(line_rotation_offset)
-            
+
             match child_count:
                 1:
                     ends_rads += 0.4188 #deg_to_rad(24)
                 5, 9:
                     i -= 1
-            
-            
+
+
             var mid_rads: float = (starts_rads + ends_rads) / 2.0 * -1.0
             var radius_mid: float = (arc_inner_radius + radius) / 2.0
-            
-            
+
+
             var draw_pos: Vector2 = Vector2.from_angle(mid_rads) * radius_mid
             draw_pos *= (1.0 + hover_radial_offset) if (hover_radial_offset != 0.0 and selection == i and selection >= 0) else 1.0
             draw_pos += hover_offset if (selection == i and selection >= 0) else Vector2.ZERO
-            
+
             i = wrap(i, 0, child_count)
-            
+
             if (arc_inner_radius < radius) and (selection == i):
                 if (child_count == 1):
                     draw_circle(offset, radius, hover_color)
@@ -261,20 +261,20 @@ func _draw() -> void:
                     var points_per_arc: int = hover_detail
                     var points_inner := PackedVector2Array()
                     var points_outer := PackedVector2Array()
-                    
+
                     for j: int in points_per_arc:
                         var angle := (starts_rads + j * (ends_rads - starts_rads) / float(points_per_arc))
                         points_inner.append(offset + ((arc_inner_radius + hover_offset_start)    * Vector2.from_angle(TAU - angle) * hover_size_factor))
                         points_outer.append(offset + ((radius + hover_offset_end)                 * Vector2.from_angle(TAU - angle) * hover_size_factor))
-                    
+
                     points_outer.reverse()
-                    
+
                     draw_polygon(
                         points_inner + points_outer,
                         PackedColorArray([hover_color]),
                     )
-            
-            
+
+
             if child_count > 1:
                 var point := Vector2.from_angle(rads)
                 draw_line(
@@ -284,19 +284,19 @@ func _draw() -> void:
                     line_width,
                     line_antialised
                 )
-            
+
             draw_child(i + (1 if first_in_center else -1), draw_pos)
-        
+
         if first_in_center:
             draw_child(0, Vector2.ZERO)
-    
-    
-    
+
+
+
     draw_arc(offset, arc_inner_radius, arc_start_angle, arc_end_angle, arc_detail, arc_color, arc_line_width, arc_antialiased)
-    
+
     if stroke_enabled:
         draw_arc(offset, radius + get_width_by_stroke_type(stroke_width, stroke_type) , TAU, 128, arc_detail, stroke_color, stroke_width, arc_antialiased)
-    
+
     if animated_pulse_enabled:
         if tick >= 100.0:
             tick = 0.0
@@ -305,24 +305,23 @@ func _draw() -> void:
 
 
 func _process(delta: float) -> void:
-    if radius < 2.0:
-        return
-    
-    
+    if radius < 2.0: return
+
+
     if animated_pulse_enabled:
         tick += delta
-    
+
     if mouse_enabled:
         var pos_offset: Vector2 = viewport_size - (size + position)
         var size_offset: Vector2 = (viewport_size / 2.0 - (offset - circle_offset))
-        
+
         var mouse_pos: Vector2 = (get_global_mouse_position() - viewport_size / 2.0) - size_offset + pos_offset - circle_offset
         var mouse_radius: float = mouse_pos.length()
-        
+
         var prev_selection := selection
         selection = -2
-        
-        
+
+
         if mouse_radius < arc_inner_radius:
             if first_in_center:
                 selection = -1
@@ -337,11 +336,11 @@ func _process(delta: float) -> void:
                     0,
                     child_count
                 )
-        
+
         if selection != prev_selection:
             selection_changed.emit(selection)
-    
-    
+
+
     queue_redraw()
 
 
@@ -349,10 +348,10 @@ func _process(delta: float) -> void:
 
 
 func _input(event: InputEvent) -> void:
-    if (event.is_action_released(select_action_name) if action_released else event.is_action_pressed(select_action_name)): 
+    if (event.is_action_released(select_action_name) if action_released else event.is_action_pressed(select_action_name)):
         if selection != -2:
             slot_selected.emit(get_child(selection + (1 if first_in_center else -1)), selection)
-    
+
     if event.is_action_pressed('ui_cancel'):
         emit_signal('selection_canceled')
 

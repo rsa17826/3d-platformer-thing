@@ -1,6 +1,6 @@
-[gd_scene format=3 uid="uid://0f4jvws0q0l4"]
+[gd_scene format=3 uid="uid://c8ywx7k27s0r8"]
 
-[ext_resource type="Script" uid="uid://dsv65nc4pfvnb" path="res://scenes/menus/main menu/load_level_button.gd" id="1_q63bo"]
+[ext_resource type="Script" uid="uid://dsv65nc4pfvnb" path="res://scenes/menus/main menu/load_level_button.gd" id="1_cdrnw"]
 
 [node name="main menu" type="Control" unique_id=1035123630]
 layout_mode = 3
@@ -25,20 +25,20 @@ layout_mode = 2
 [node name="Button" type="Button" parent="CenterContainer/levels" unique_id=856876462]
 layout_mode = 2
 text = "level 1"
-script = ExtResource("1_q63bo")
+script = ExtResource("1_cdrnw")
 levelnumber = 1
 metadata/_edit_pinned_properties_ = [&"levelnumber"]
 
 [node name="Button2" type="Button" parent="CenterContainer/levels" unique_id=1319138031]
 layout_mode = 2
 text = "level 2"
-script = ExtResource("1_q63bo")
+script = ExtResource("1_cdrnw")
 levelnumber = 2
 
 [node name="Button3" type="Button" parent="CenterContainer/levels" unique_id=154069290]
 layout_mode = 2
 text = "level 3"
-script = ExtResource("1_q63bo")
+script = ExtResource("1_cdrnw")
 levelnumber = 3
 
 [connection signal="pressed" from="CenterContainer/levels/Button" to="CenterContainer/levels/Button" method="_on_pressed"]

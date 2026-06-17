@@ -11,14 +11,13 @@ config_version=5
 [application]
 
 config/name="3d test"
-run/main_scene="uid://bdvdf5v87mmrr"
+run/main_scene="uid://0f4jvws0q0l4"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
 global="*res://global.gd"
-AppConfig="*uid://cjke6crjg14a0"
 ToastParty="*uid://c3o3pswn4rkt1"
 
 [beautifier]
@@ -34,7 +33,7 @@ window/subwindows/embed_subwindows=false
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/godot_beautifier/plugin.cfg", "res://addons/gridmap-plus/plugin.cfg", "res://addons/log/plugin.cfg", "res://addons/maaacks_options_menus/plugin.cfg", "res://addons/toastparty/plugin.cfg")
+enabled=PackedStringArray("res://addons/godot_beautifier/plugin.cfg", "res://addons/gridmap-plus/plugin.cfg", "res://addons/log/plugin.cfg", "res://addons/toastparty/plugin.cfg")
 
 [file_customization]
 
@@ -121,6 +120,8 @@ locale/translations=PackedStringArray("res://addons/maaacks_options_menus/base/t
 [maaacks_options_menus]
 
 disable_plugin_dialogues=true
+disable_update_check=false
+disable_install_wizard=true
 
 [physics]
 

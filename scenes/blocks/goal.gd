@@ -10,8 +10,7 @@ func _ready():
 
 func _on_body_entered(body: Node3D):
   if body.is_in_group("player"):
-    if len(get_tree().get_nodes_in_group("target")):
-      return
+    if len(get_tree().get_nodes_in_group("target")): return
     global.timer.stop()
 
     get_tree().change_scene_to_file.call_deferred("res://scenes/menus/level end menu/level end menu.tscn")

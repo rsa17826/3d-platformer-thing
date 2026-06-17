@@ -9,7 +9,7 @@
 [ext_resource type="Script" uid="uid://dd3yi0aokcrkg" path="res://scenes/player/ui/distance ui.gd" id="7_m60d1"]
 [ext_resource type="Texture2D" uid="uid://b3b5s17pkppgh" path="res://images/circle bg.png" id="7_nqvs7"]
 [ext_resource type="Texture2D" uid="uid://dw7vhalvmx0av" path="res://images/circle fg.png" id="9_5user"]
-[ext_resource type="PackedScene" uid="uid://bdvdf5v87mmrr" path="res://addons/maaacks_options_menus/examples/scenes/menus/options_menu/master_options_menu_with_tabs.tscn" id="10_b6ldt"]
+[ext_resource type="PackedScene" uid="uid://0f4jvws0q0l4" path="res://scenes/menus/main menu/main_menu.tscn" id="10_b6ldt"]
 [ext_resource type="PackedScene" uid="uid://gqiqvycyr51x" path="res://scenes/menus/pre level menu/pre level menu.tscn" id="10_e4o80"]
 [ext_resource type="Script" uid="uid://bm52lgmpe7708" path="res://scenes/player/ui/prevtime.gd" id="10_xek57"]
 [ext_resource type="Script" uid="uid://dmss2t8rv4nqu" path="res://scenes/player/ui/timer.gd" id="11_se0sd"]

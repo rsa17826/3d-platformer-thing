@@ -5,7 +5,7 @@ extends Node3D
 func _ready():
   if !id:
     log.err("target: id not set")
-    
+
 func _on_area_entered(area: Area3D):
   if area.is_in_group("thrown"):
     # for node in get_tree().get_nodes_in_group("target"):
