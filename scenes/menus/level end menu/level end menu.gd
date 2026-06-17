@@ -45,7 +45,10 @@ func _ready():
 
 func _input(_event):
   if Input.is_action_just_pressed("next level"):
+    log.pp("next level", global.level, thislevel)
     global.level = thislevel + 1
     get_tree().change_scene_to_file.call_deferred("res://scenes/levels/" + global.levelnames[global.level] + ".tscn")
   if Input.is_action_just_pressed("replay level"):
+    log.pp(" level", global.level, thislevel)
+    log.pp("same level")
     get_tree().change_scene_to_file.call_deferred("res://scenes/levels/" + global.levelnames[global.level] + ".tscn")

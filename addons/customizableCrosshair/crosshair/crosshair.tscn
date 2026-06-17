@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://iwlpamd20oko"]
+[gd_scene format=3 uid="uid://iwlpamd20oko"]
 
-[ext_resource type="Script" path="res://addons/customizableCrosshair/crosshair/crosshair.gd" id="1_nrohy"]
+[ext_resource type="Script" uid="uid://6sp8b3thl8o5" path="res://addons/customizableCrosshair/crosshair/crosshair.gd" id="1_nrohy"]
 
-[node name="Crosshair" type="CenterContainer"]
+[node name="Crosshair" type="CenterContainer" unique_id=521293408]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -16,10 +16,10 @@ crosshairSize = 5.0
 crosshairGap = 3.0
 crosshairColor = Color(0, 1, 0, 1)
 
-[node name="TopLine" type="Line2D" parent="."]
+[node name="TopLine" type="Line2D" parent="." unique_id=74449237]
 antialiased = true
 
-[node name="topLineOutline" type="Line2D" parent="TopLine"]
+[node name="topLineOutline" type="Line2D" parent="TopLine" unique_id=1852282211]
 visible = false
 z_index = -1
 points = PackedVector2Array(0, -3, 0, -8)
@@ -27,30 +27,10 @@ width = 2.0
 default_color = Color(0, 0, 0, 1)
 antialiased = true
 
-[node name="topHorizontalLine" type="Line2D" parent="TopLine"]
+[node name="topHorizontalLine" type="Line2D" parent="TopLine" unique_id=1487395368]
 visible = false
 
-[node name="topHorizontalLineOutline" type="Line2D" parent="TopLine/topHorizontalLine"]
-visible = false
-z_index = -1
-points = PackedVector2Array(0, -3, 0, -8)
-width = 2.0
-default_color = Color(0, 0, 0, 1)
-antialiased = true
-
-[node name="BottomLine" type="Line2D" parent="."]
-antialiased = true
-
-[node name="bottomLineOutline" type="Line2D" parent="BottomLine"]
-visible = false
-z_index = -1
-default_color = Color(0, 0, 0, 1)
-antialiased = true
-
-[node name="bottomHorizontalLine" type="Line2D" parent="BottomLine"]
-visible = false
-
-[node name="bottomHorizontalLineOutline" type="Line2D" parent="BottomLine/bottomHorizontalLine"]
+[node name="topHorizontalLineOutline" type="Line2D" parent="TopLine/topHorizontalLine" unique_id=119886084]
 visible = false
 z_index = -1
 points = PackedVector2Array(0, -3, 0, -8)
@@ -58,19 +38,19 @@ width = 2.0
 default_color = Color(0, 0, 0, 1)
 antialiased = true
 
-[node name="LeftLine" type="Line2D" parent="."]
+[node name="BottomLine" type="Line2D" parent="." unique_id=1871471975]
 antialiased = true
 
-[node name="leftLineOutline" type="Line2D" parent="LeftLine"]
+[node name="bottomLineOutline" type="Line2D" parent="BottomLine" unique_id=1606571085]
 visible = false
 z_index = -1
 default_color = Color(0, 0, 0, 1)
 antialiased = true
 
-[node name="leftHorizontalLine" type="Line2D" parent="LeftLine"]
+[node name="bottomHorizontalLine" type="Line2D" parent="BottomLine" unique_id=221022878]
 visible = false
 
-[node name="leftHorizontalLineOutline" type="Line2D" parent="LeftLine/leftHorizontalLine"]
+[node name="bottomHorizontalLineOutline" type="Line2D" parent="BottomLine/bottomHorizontalLine" unique_id=82275745]
 visible = false
 z_index = -1
 points = PackedVector2Array(0, -3, 0, -8)
@@ -78,19 +58,39 @@ width = 2.0
 default_color = Color(0, 0, 0, 1)
 antialiased = true
 
-[node name="RightLine" type="Line2D" parent="."]
+[node name="LeftLine" type="Line2D" parent="." unique_id=723254511]
 antialiased = true
 
-[node name="rightLineOutline" type="Line2D" parent="RightLine"]
+[node name="leftLineOutline" type="Line2D" parent="LeftLine" unique_id=899208099]
 visible = false
 z_index = -1
 default_color = Color(0, 0, 0, 1)
 antialiased = true
 
-[node name="rightHorizontalLine" type="Line2D" parent="RightLine"]
+[node name="leftHorizontalLine" type="Line2D" parent="LeftLine" unique_id=30254918]
 visible = false
 
-[node name="rightHorizontalLineOutline" type="Line2D" parent="RightLine/rightHorizontalLine"]
+[node name="leftHorizontalLineOutline" type="Line2D" parent="LeftLine/leftHorizontalLine" unique_id=880795774]
+visible = false
+z_index = -1
+points = PackedVector2Array(0, -3, 0, -8)
+width = 2.0
+default_color = Color(0, 0, 0, 1)
+antialiased = true
+
+[node name="RightLine" type="Line2D" parent="." unique_id=1967221689]
+antialiased = true
+
+[node name="rightLineOutline" type="Line2D" parent="RightLine" unique_id=24523230]
+visible = false
+z_index = -1
+default_color = Color(0, 0, 0, 1)
+antialiased = true
+
+[node name="rightHorizontalLine" type="Line2D" parent="RightLine" unique_id=305209559]
+visible = false
+
+[node name="rightHorizontalLineOutline" type="Line2D" parent="RightLine/rightHorizontalLine" unique_id=73622911]
 visible = false
 z_index = -1
 points = PackedVector2Array(0, -3, 0, -8)

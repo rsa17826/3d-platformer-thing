@@ -42,10 +42,8 @@ func shownode(i):
 
 
 func _on_area_3d_body_entered(body: Node3D) -> void:
-  if !visible:
-    return
-  if isthrown:
-    return
+  if !visible: return
+  if isthrown: return
   if body.is_in_group("player"):
     global.player_ability = power
     global.event.trigger("power got")

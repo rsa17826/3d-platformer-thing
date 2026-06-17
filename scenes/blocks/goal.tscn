@@ -1,8 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://ixv0giut03ym"]
+[gd_scene format=3 uid="uid://ixv0giut03ym"]
 
-[ext_resource type="Script" path="res://scenes/blocks/goal.gd" id="1_4x0ff"]
+[ext_resource type="Script" uid="uid://b06h3ux77kwnf" path="res://scenes/blocks/goal.gd" id="1_4x0ff"]
 [ext_resource type="Material" uid="uid://hc1eb4ooyix3" path="res://material/goal.tres" id="1_msc3w"]
-[ext_resource type="Shader" path="res://scenes/blocks/goal.gdshader" id="3_lrj8x"]
+[ext_resource type="Shader" uid="uid://bnduiuhgtqspy" path="res://scenes/blocks/goal.gdshader" id="3_lrj8x"]
 
 [sub_resource type="SphereMesh" id="SphereMesh_wecwb"]
 material = ExtResource("1_msc3w")
@@ -18,19 +18,19 @@ material = ExtResource("1_msc3w")
 
 [sub_resource type="Skin" id="Skin_htgx6"]
 
-[node name="goal" type="Area3D"]
+[node name="goal" type="Area3D" unique_id=1866094912]
 collision_layer = 3
 collision_mask = 3
 script = ExtResource("1_4x0ff")
 
-[node name="MeshInstance3D5" type="MeshInstance3D" parent="."]
+[node name="MeshInstance3D5" type="MeshInstance3D" parent="." unique_id=973406416]
 transform = Transform3D(2, 0, 0, 0, 2.014, 0, 0, 0, 2, 0, 0, 0)
 mesh = SubResource("SphereMesh_wecwb")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1062032087]
 shape = SubResource("SphereShape3D_6tson")
 
-[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+[node name="GPUParticles3D" type="GPUParticles3D" parent="." unique_id=1255008]
 visible = false
 lifetime = 7.95
 process_material = SubResource("ShaderMaterial_ubg1c")

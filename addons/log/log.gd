@@ -1,7 +1,7 @@
 @tool
 extends Object
 class_name log
-
+# @noregex
 static func assoc(opts: Dictionary, key: String, val):
   var _opts = opts.duplicate(true)
   _opts[key] = val
@@ -9,18 +9,23 @@ static func assoc(opts: Dictionary, key: String, val):
 
 ## prefix ###########################################################################
 
-static func log_prefix(stack):
+static func log_prefix(stack, colored:=false):
   if len(stack) > 1:
     var call_site = stack[1]
-    var basename = call_site["source"].get_file().get_basename()
+    var basename = call_site.source.get_file().get_basename()
     var line_num = str(call_site.get("line", 0))
-    if call_site["source"].match("*/test/*"):
-      return "{" + basename + ":" + line_num + "}: "
-    elif call_site["source"].match("*/addons/*"):
-      return "<" + basename + ":" + line_num + ">: "
+    if call_site.source.match("*/addons/*"):
+      return (getcolor("red") if colored else '') \
+      +"<" + basename + ":" + line_num + ">: " \
+      + (getcolor("end") if colored else '')
     else:
-      return "[" + basename + ":" + line_num + "]: "
-
+      return (getcolor("lightblue") if colored else '') \
+      +"[" + basename + ":" + line_num + "]: " \
+      + (getcolor("end") if colored else '')
+  # print_rich(stack, "asdkahsdjkasdkasdkh")
+  return (getcolor("magenta") if colored else '') \
+  +"[???]: " \
+  + (getcolor("end") if colored else '')
 ## colors ###########################################################################
 
 # terminal safe colors:
@@ -54,10 +59,10 @@ static var COLORS_TERMINAL_SAFE = {
   "vector_value": "green",
   "class_name": "magenta",
   TYPE_NIL: "pink",
-  TYPE_BOOL: "pink",
+  TYPE_BOOL: "blue",
   TYPE_INT: "green",
   TYPE_FLOAT: "green",
-  TYPE_STRING: "pink",
+  TYPE_STRING: "purple",
   TYPE_VECTOR2: "green",
   TYPE_VECTOR2I: "green",
   TYPE_RECT2: "green",
@@ -151,11 +156,11 @@ static var COLORS_PRETTY_V1 = {
   TYPE_MAX: "pink",
   }
 
-static func color_scheme(opts = {}):
+static func color_scheme(opts={}):
   return log.COLORS_TERMINAL_SAFE
   # return log.COLORS_PRETTY_V1
 
-static func color_wrap(s, opts = {}):
+static func color_wrap(s, opts={}):
   var use_color = opts.get("use_color", true)
   var colors = opts.get("color_scheme", color_scheme(opts))
 
@@ -179,7 +184,7 @@ static func color_wrap(s, opts = {}):
         color = colors.get(s_type)
 
     if color == null:
-      print("log.gd could not determine color for object: %s type: (%s)" % [str(s), typeof(s)])
+      log.pp("log.gd could not determine color for object: %s type: (%s)" % [str(s), typeof(s)])
 
     return "[color=%s]%s[/color]" % [color, s]
   else:
@@ -188,19 +193,21 @@ static func color_wrap(s, opts = {}):
 ## to_pretty ###########################################################################
 
 # TODO read from config
-static var max_array_size = 20
+static var max_array_size = 2000
 
 # returns the passed object as a decorated string
-static func to_pretty(msg, opts = {}):
+static func to_pretty(msg, opts={}):
   var newlines = opts.get("newlines", false)
   var use_color = opts.get("use_color", true)
   var indent_level = opts.get("indent_level", 0)
   if not "indent_level" in opts:
-    opts["indent_level"] = indent_level
+    opts.indent_level = indent_level
 
   var omit_vals_for_keys = ["layer_0/tile_data"]
   if not is_instance_valid(msg) and typeof(msg) == TYPE_OBJECT:
     return str(msg)
+  if msg is InputEvent: # for InputEventMouseButton
+    return type_string(typeof(msg))
   if msg is Object and msg.has_method("to_pretty"):
     return log.to_pretty(msg.to_pretty(), opts)
   elif msg is Object and msg.has_method("data"):
@@ -319,10 +326,13 @@ static func to_pretty(msg, opts = {}):
 
 ## to_printable ###########################################################################
 
-static func to_printable(msgs, opts = {}):
+static func to_printable(msgs, opts={}):
   var newmsgs = []
   for msg in msgs:
-    newmsgs.append(msg)
+    if typeof(msg) == typeof(""):
+      newmsgs.append('"' + msg + '"')
+    else:
+      newmsgs.append(msg)
     newmsgs.append('-')
   msgs = newmsgs
   if len(msgs):
@@ -352,58 +362,254 @@ static func to_printable(msgs, opts = {}):
       m += "%s " % str(msg)
   return m.trim_suffix(" ")
 
-static func is_not_default(v):
-  return not v is String or (v is String and v != "ZZZDEF")
+static func getcolor(color: String):
+  match color.to_lower():
+    "end":
+      return "[/color]"
+    "nc":
+      return "[/color]"
+    _: return '[color=' + color + ']'
+
+static func spaces(count: int) -> String:
+  var s = ''
+  for i in range(count):
+    s += ' '
+    # s += str(count) + ' '
+  return s
+
+static func format_number_with_commas(number: Variant) -> String:
+  if global.same(number, INF):
+    return "INF"
+  if global.same(number, -INF):
+    return "-INF"
+  if is_nan(number):
+    return "NAN"
+  var rest = '.' + str(number).split(".")[1] if number is float else ''
+  number = str(int(floor(number)))
+  for i in range(
+    number.length() - (3
+    ), (1 if number.begins_with('-') else 0), -3
+  ):
+    number = number.insert(i, ',')
+  return number + rest
+
+static func coloritem(item: Variant, tab: int = -2, isarrafterdict: bool = false, lastitemwasovermax: bool = false) -> String:
+  var wrapat: int = 60
+  tab += 2
+  if not is_instance_valid(item) and str(item) == "<Freed Object>":
+    return getcolor("red") + "<Freed Object>" + getcolor("end")
+  if item == null:
+    return getcolor("blue") + "null" + getcolor("end")
+
+  if item is Callable:
+    return getcolor("RED") + "<" + "function" + " " + getcolor("BOLD") + getcolor("BLUE") + str(item) + getcolor("END") + getcolor("RED") + ">" + getcolor("END")
+
+  if item is StringName:
+    return getcolor("darkorange") + "&\"" + getcolor("END") + getcolor("purple") + str(item).replace("[", "[lb]") + getcolor("END") + getcolor("darkorange") + '"' + getcolor("END")
+    # return getcolor("darkorange") + "&" + getcolor("END") + getcolor("purple") + '"' + str(item) + '"' + getcolor("END")
+  if item is String:
+    return getcolor("purple") + '"' + str(item).replace("[", "[lb]") + '"' + getcolor("END")
+  if item is int or item is float:
+    return getcolor("GREEN") + format_number_with_commas(item) + getcolor("END")
+
+  if item is Dictionary:
+    if not item:
+      return getcolor("orange") + "{ }" + getcolor("end")
+    if len(JSON.stringify(item)) + tab < wrapat:
+      var text = getcolor("orange") \
+      # + "\n"
+      + (spaces(tab) if not isarrafterdict else "") \
+      +"{ " \
+      + getcolor("END")
+      var arr = []
+      for k in item:
+        var v = item[k]
+        arr.append((
+          getcolor("purple") + '"' + k + '"' + getcolor("END") if k is String else coloritem(k, tab)
+        ) + " " + getcolor("orange") + ": " + getcolor("END") + coloritem(v, tab, true))
+
+      text += (getcolor("orange") + "," + getcolor("END") + " ").join(
+        arr
+      )
+      text += getcolor("orange") \
+      +" }" \
+      + getcolor("END")
+      return text
+    else:
+      var text = getcolor("orange") \
+      # + "\n"
+      # + ("" if isarrafterdict else '') \
+      +"{" \
+      + getcolor("END") \
+      +"\n"
+      var arr = []
+      for k in item:
+        var v = item[k]
+        arr.append((
+          coloritem(k, tab)
+        ) + getcolor("orange") + ": " + getcolor("END") + coloritem(v, tab, true))
+      text += spaces(tab + 2) + (
+        (getcolor("orange") + "," + getcolor("END") + "\n  " + spaces(tab)).join(
+          arr
+        )
+      )
+      text += " \n" \
+      + getcolor("orange") \
+      + spaces(tab) \
+      +"}" \
+      + getcolor("END")
+      return text
+  if item is Array or item is PackedStringArray:
+    var prefix = ''
+    var postfix = ''
+    if item is PackedStringArray:
+      prefix = getcolor("darkgreen") + "PackedStringArray(" + getcolor("END")
+    if prefix: postfix = getcolor("darkgreen") + ")" + getcolor("END")
+    if not item:
+      return prefix + getcolor("orange") + "[ ]" + getcolor("end") + postfix
+    if len(JSON.stringify(item)) + tab < wrapat:
+      var text = getcolor("orange") \
+      + ("" if isarrafterdict else spaces(tab)) \
+      +"[ " \
+      + getcolor("END") \
+      + (\
+        (getcolor("orange") + "," + getcolor("END") + " ").join(
+          (item as Array).map(
+            func(newitem):
+              return coloritem(newitem, tab),
+          )
+        )
+      ) \
+      + getcolor("orange") \
+      +" ]" \
+      + getcolor("END")
+      return prefix + text + postfix
+    else:
+      var text = getcolor("orange") \
+      # + ("" if isarrafterdict else '') \
+      +"[\n" \
+      + getcolor("END") \
+      + (
+        (getcolor("orange") + "," + getcolor("END") + "\n").join(
+          (item as Array).map(
+            func(newitem): return (
+              spaces(tab + 2)
+            ) \
+            + coloritem(newitem, tab),
+          )
+        )
+      ) + getcolor("orange") \
+      +"\n" \
+      + spaces(tab) \
+      +"]" \
+      + getcolor("END")
+      return prefix + text + postfix
+  if item is Vector2 or item is Vector2i:
+    return getcolor("darkgreen") \
+    + ("Vector2i" if item is Vector2i else "Vector2") + "(" + \
+    getcolor("end") + coloritem(item.x) + getcolor("darkgreen") \
+    +", " \
+    + getcolor("end") + coloritem(item.y) + getcolor("darkgreen") \
+    +")" + getcolor("end")
+  if item is bool:
+    return getcolor("blue") + str(item) + getcolor("end")
+  if item is Color:
+    return getcolor("darkgreen") + "Color(" + getcolor("end") + (
+      getcolor("pink") if item.r < .66 else
+      getcolor("red")
+    ) + str(item.r) + getcolor("orange") + ', ' + getcolor("end") + (
+      getcolor("lightgreen") if item.g < .66 else
+      getcolor("green")
+    ) + str(item.g) + getcolor("orange") + ', ' + getcolor("end") + (
+      getcolor("lightblue") if item.b < .66 else
+      getcolor("blue")
+    ) + str(item.b) + getcolor("orange") + ', ' + getcolor("end") \
+    + getcolor("white") + str(item.a) + getcolor("end") \
+    + getcolor("darkgreen") + ')' + getcolor("end")
+    # return getcolor("darkgreen") + "Color(" + getcolor("end") + (
+    #   getcolor("white") if item.r < .33 else
+    #   getcolor("pink") if item.r < .66 else
+    #   getcolor("red")
+    # ) + str(item.r) + getcolor("orange") + ', ' + getcolor("end") + (
+    #   getcolor("white") if item.g < .33 else
+    #   getcolor("lightgreen") if item.g < .66 else
+    #   getcolor("green")
+    # ) + str(item.g) + getcolor("orange") + ', ' + getcolor("end") + (
+    #   getcolor("white") if item.b < .33 else
+    #   getcolor("lightblue") if item.b < .66 else
+    #   getcolor("blue")
+    # ) + str(item.b) + getcolor("orange") + ', ' + getcolor("end") \
+    # + getcolor("white") + str(item.a) + getcolor("end") \
+    # + getcolor("darkgreen") + ')' + getcolor("end")
+
+  if item is Node:
+    var color = getcolor(
+      'blue' if item is Node2D else
+      'green' if item is Control else
+      'red' if item is Node3D else
+      'white' if item is Node else 'black'
+    )
+    # var color = getcolor(
+    #   'lightblue' if item is Node2D else
+    #   'lightgreen' if item is Control else
+    #   'pink' if item is Node3D else
+    #   'white' if item is Node else 'black'
+    # )
+    return getcolor("red") + "<" + getcolor("end") + color + str(item) \
+    .replace(":", getcolor("end") + getcolor("red") + ":" + getcolor("end") + color) \
+    .replace("<", '') \
+    .replace("#", getcolor("end") + getcolor("darkred") + "#") \
+    .replace(">", getcolor("end") + getcolor("red") + ">") \
+    + getcolor('end')
+  log.pp("UNSET ITEM TYPE: " + type_string(typeof(item)) + ' - ' + str(item))
+  return spaces(tab) + '"' + str(item) + '"'
 
 ## public print fns ###########################################################################
+static func test(...msgs) -> void:
+  print_rich(
+    'TEST:\n\n' + " - ".join(msgs.map(coloritem)),
+  )
+  global.get_tree().quit()
 
-static func pp(msg = "ZZZDEF", msg2 = "ZZZDEF", msg3 = "ZZZDEF", msg4 = "ZZZDEF", msg5 = "ZZZDEF", msg6 = "ZZZDEF", msg7 = "ZZZDEF"):
-  var msgs = [msg, msg2, msg3, msg4, msg5, msg6, msg7]
-  msgs = msgs.filter(log.is_not_default)
-  var m = log.to_printable(msgs, {stack = get_stack()})
+static func pp(...msgs) -> void:
+  var m = log_prefix(get_stack(), true) + " - ".join(msgs.map(coloritem))
   print_rich(m)
-
-static func info(msg, msg2 = "ZZZDEF", msg3 = "ZZZDEF", msg4 = "ZZZDEF", msg5 = "ZZZDEF", msg6 = "ZZZDEF", msg7 = "ZZZDEF"):
-  var msgs = [msg, msg2, msg3, msg4, msg5, msg6, msg7]
-  msgs = msgs.filter(log.is_not_default)
-  var m = log.to_printable(msgs, {stack = get_stack()})
+  logToFile(m)
+static func info(...msgs) -> void:
+  var m = log_prefix(get_stack(), true) + " - ".join(msgs.map(coloritem))
   print_rich(m)
+  logToFile(m)
 
-static func log(msg, msg2 = "ZZZDEF", msg3 = "ZZZDEF", msg4 = "ZZZDEF", msg5 = "ZZZDEF", msg6 = "ZZZDEF", msg7 = "ZZZDEF"):
-  var msgs = [msg, msg2, msg3, msg4, msg5, msg6, msg7]
-  msgs = msgs.filter(log.is_not_default)
-  var m = log.to_printable(msgs, {stack = get_stack()})
-  print_rich(m)
-
-static func prn(msg, msg2 = "ZZZDEF", msg3 = "ZZZDEF", msg4 = "ZZZDEF", msg5 = "ZZZDEF", msg6 = "ZZZDEF", msg7 = "ZZZDEF"):
-  var msgs = [msg, msg2, msg3, msg4, msg5, msg6, msg7]
-  msgs = msgs.filter(log.is_not_default)
-  var m = log.to_printable(msgs, {stack = get_stack(), newlines = true})
-  print_rich(m)
-
-static func warn(msg, msg2 = "ZZZDEF", msg3 = "ZZZDEF", msg4 = "ZZZDEF", msg5 = "ZZZDEF", msg6 = "ZZZDEF", msg7 = "ZZZDEF"):
-  var msgs = [msg, msg2, msg3, msg4, msg5, msg6, msg7]
-  msgs = msgs.filter(log.is_not_default)
-  var rich_msgs = msgs.duplicate()
-  rich_msgs.push_front("[color=yellow][WARN][/color]")
-  print_rich(log.to_printable(rich_msgs, {stack = get_stack(), newlines = true}))
-  var m = log.to_printable(msgs, {stack = get_stack(), newlines = true, pretty = false})
+static func warn(...msgs) -> void:
+  print_rich("[color=yellow][WARN][/color]: " + log_prefix(get_stack(), true) + " - ".join(msgs.map(coloritem)))
+  logToFile("[color=yellow][WARN][/color]: " + log_prefix(get_stack(), true) + " - ".join(msgs.map(coloritem)))
+  var m = log.to_printable(msgs, {stack=get_stack(), newlines=true, pretty=false})
   push_warning(m)
 
-static func err(msg, msg2 = "ZZZDEF", msg3 = "ZZZDEF", msg4 = "ZZZDEF", msg5 = "ZZZDEF", msg6 = "ZZZDEF", msg7 = "ZZZDEF"):
-  var msgs = [msg, msg2, msg3, msg4, msg5, msg6, msg7]
-  msgs = msgs.filter(log.is_not_default)
-  var rich_msgs = msgs.duplicate()
-  rich_msgs.push_front("[color=red][ERR][/color]")
-  print_rich(log.to_printable(rich_msgs, {stack = get_stack(), newlines = true}))
-  var m = log.to_printable(msgs, {stack = get_stack(), newlines = true, pretty = false})
+static func err(...msgs) -> void:
+  print_rich("[color=red][ERR][/color]: " + log_prefix(get_stack(), true) + " - ".join(msgs.map(coloritem)))
+  logToFile("[color=red][ERR][/color]: " + log_prefix(get_stack(), true) + " - ".join(msgs.map(coloritem)))
+  var m = log.to_printable(msgs, {stack=get_stack(), newlines=true, pretty=false})
+  if not Engine.is_editor_hint():
+    ToastParty.error(m)
   push_error(m)
 
-static func error(msg, msg2 = "ZZZDEF", msg3 = "ZZZDEF", msg4 = "ZZZDEF", msg5 = "ZZZDEF", msg6 = "ZZZDEF", msg7 = "ZZZDEF"):
-  var msgs = [msg, msg2, msg3, msg4, msg5, msg6, msg7]
-  msgs = msgs.filter(log.is_not_default)
-  var rich_msgs = msgs.duplicate()
-  rich_msgs.push_front("[color=red][ERR][/color]")
-  print_rich(log.to_printable(rich_msgs, {stack = get_stack(), newlines = true}))
-  var m = log.to_printable(msgs, {stack = get_stack(), newlines = true, pretty = false})
+static func error(...msgs) -> void:
+  print_rich("[color=red][ERR][/color]: " + log_prefix(get_stack(), true) + " - ".join(msgs.map(coloritem)))
+  var m = log.to_printable(msgs, {stack=get_stack(), newlines=true, pretty=false})
+  if not Engine.is_editor_hint():
+    ToastParty.error(m)
   push_error(m)
+
+static func logToFile(m): return
+  # if not global.logger_ui:
+  #   await global.waituntil(func(): return global.logger_ui)
+  # global.logger_ui.add_log(m, 1)
+
+static var add_log: Callable
+static func debug(...msgs) -> void:
+  var m: String = log_prefix(get_stack(), true) + " - ".join(msgs.map(coloritem))
+  if len(m) > 3000:
+    m = "TO LONG: " + m.substr(0, 3000) + "..."
+  if add_log:
+    add_log.call(m)
