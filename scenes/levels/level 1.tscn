@@ -24,15 +24,15 @@ environment = SubResource("Environment_76m2e")
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 3.25081, -5.6907)
 
 [node name="powers2" parent="powers" unique_id=1963291844 instance=ExtResource("3_8nux6")]
-transform = Transform3D(-0.3990872, 0, 0.02663441, 0, 0.4, 0, -0.02663441, 0, -0.3990872, 14.7722, 1.2045, -0.853656)
+transform = Transform3D(0.31875935, 0, -0.24102569, 0, 0.4, 0, 0.24102569, 0, 0.31875935, 14.7722, 1.2045, -0.853656)
 power = 1
 
 [node name="powers3" parent="powers" unique_id=247520245 instance=ExtResource("3_8nux6")]
-transform = Transform3D(-0.25126168, 0, 0.31120354, 0, 0.4, 0, -0.31120354, 0, -0.25126168, 8.68533, 4.86181, 14.0801)
+transform = Transform3D(0.27529418, 0, 0.28967077, 0, 0.4, 0, -0.28967077, 0, 0.27529418, 8.685331, 4.238904, 14.080101)
 power = 2
 
 [node name="powers4" parent="powers" unique_id=589464178 instance=ExtResource("3_8nux6")]
-transform = Transform3D(-0.39772302, 0, 0.042386238, 0, 0.4, 0, -0.042386238, 0, -0.39772302, 13.006899, 7.5692196, 32.9775)
+transform = Transform3D(0.30898285, 0, -0.2534364, 0, 0.4, 0, 0.2534364, 0, 0.30898285, 13.006899, 7.5692196, 32.9775)
 power = 1
 
 [node name="DirectionalLight3D2" type="DirectionalLight3D" parent="." unique_id=2098210860]

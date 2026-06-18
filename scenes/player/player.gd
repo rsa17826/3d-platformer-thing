@@ -38,9 +38,6 @@ func _process(_delta):
   if starts_with(global.map.mesh_library.get_item_name(temp), "ice"):
     CURRENT_USER_MOVE_SPEED = USER_MOVE_SPEED_ICE
 
-  global.debuguiadd("CURRENT_USER_MOVE_SPEED", CURRENT_USER_MOVE_SPEED)
-  global.debuguiadd("bup", temp)
-  global.debuguiadd("bup", global.map.mesh_library.get_item_name(temp))
 var inbeforelevelstart := true
 var inmenu := false
 var jumps := 0
@@ -51,7 +48,7 @@ var dashing: float = 0
 var blockunderplayer: int = -1
 var tempstorage = {
   "predashvel": Vector3.ZERO,
-  "tempstorage.dashdir": Vector3.ZERO,
+  "dashdir": Vector3.ZERO,
 }
 
 # var boosting: float = 0
@@ -224,15 +221,7 @@ func _physics_process(delta: float) -> void:
   velocity = Vector3.ZERO
   for thisspeed in speed.keys():
     velocity += speed[thisspeed]
-    global.debuguiadd("speed." + thisspeed, speed[thisspeed])
     # speed[thisspeed] *= .95
-  global.debuguiadd("dashing", dashing)
-  global.debuguiadd("dashcd", dashcd)
-  global.debuguiadd("position", position)
-  global.debuguiadd("inbeforelevelstart", inbeforelevelstart)
-  global.debuguiadd("jumpiung", trypress.jump)
-  global.debuguiadd("global.level", global.level)
-  # global.debuguiadd("boosting", boosting)
   # log.pp(speed.dash)
   move_and_slide()
 
