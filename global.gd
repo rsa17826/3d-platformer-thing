@@ -70,33 +70,33 @@ class tilemap:
     var tile_map_layers = []
     tile_map_layers.resize(layers)
     for layer in layers:
-        tile_map_layers[layer] = tile_map.get("layer_%s/tile_data" % layer)
+      tile_map_layers[layer] = tile_map.get("layer_%s/tile_data" % layer)
     return tile_map_layers
   static func load(tile_map: TileMap, data: Array) -> void:
     for layer in data.size():
-        var tiles = data[layer]
-        tile_map.set('layer_%s/tile_data' % layer, tiles)
+      var tiles = data[layer]
+      tile_map.set('layer_%s/tile_data' % layer, tiles)
 
 class file:
   static func write(path, text, asjson=true):
     FileAccess.open(path, FileAccess.WRITE_READ).store_string(JSON.stringify(text) if asjson else text)
   static func read(path, asjson=true, default=''):
-      var f = FileAccess.open(path, FileAccess.READ)
-      if !f:
-        FileAccess.open(path, FileAccess.WRITE_READ).store_string(default)
-        return JSON.parse_string(default) if asjson else default
-        # return null if asjson else default
-      if asjson:
-        if JSON.parse_string(f.get_as_text()) != null:
-          return JSON.parse_string(f.get_as_text())
-        else:
-          if JSON.parse_string(default) != null:
-            return JSON.parse_string(default)
-          else:
-            breakpoint
-            return default
+    var f = FileAccess.open(path, FileAccess.READ)
+    if !f:
+      FileAccess.open(path, FileAccess.WRITE_READ).store_string(default)
+      return JSON.parse_string(default) if asjson else default
+      # return null if asjson else default
+    if asjson:
+      if JSON.parse_string(f.get_as_text()) != null:
+        return JSON.parse_string(f.get_as_text())
       else:
-        return f.get_as_text()
+        if JSON.parse_string(default) != null:
+          return JSON.parse_string(default)
+        else:
+          breakpoint
+          return default
+    else:
+      return f.get_as_text()
 class arr:
   static func getcount(array, count):
     var newarr = []
@@ -125,17 +125,20 @@ class event:
         else:
           cb.call(data1, data2, data3)
   static func off(obj: Dictionary) -> void:
-      var msg: String = obj.msg
-      var i: int = obj.index
-      if !msg in triggers:
-        log.error(triggers, 'cant remove ' + str(i) + ' from ' + msg + ' because ' + msg + ' doesnt exist')
-        return
-      if len(triggers[msg]) <= i:
-        log.error(triggers[msg], 'cant remove ' + str(i) + ' from ' + msg + ' because ' + str(i) + ' doesnt exist in ' + msg)
-        return
-      triggers[msg][i] = func() -> void: pass
+    var msg: String = obj.msg
+    var i: int = obj.index
+    if !msg in triggers:
+      log.error(triggers, 'cant remove ' + str(i) + ' from ' + msg + ' because ' + msg + ' doesnt exist')
+      return
+    if len(triggers[msg]) <= i:
+      log.error(triggers[msg], 'cant remove ' + str(i) + ' from ' + msg + ' because ' + str(i) + ' doesnt exist in ' + msg)
+      return
+    triggers[msg][i] = func() -> void: pass
   static func on(msg: String, cb: Callable) -> Dictionary:
     if !msg in triggers:
       triggers[msg] = []
     triggers[msg].append(cb)
     return {'msg': msg, 'index': len(triggers[msg]) - 1}
+
+func _ready():
+  DisplayServer.window_set_mode(DisplayServer.WindowMode.WINDOW_MODE_EXCLUSIVE_FULLSCREEN)
