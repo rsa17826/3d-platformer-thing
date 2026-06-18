@@ -1,6 +1,14 @@
+@tool
 extends Node3D
 
-@export var power: global.abilities = global.abilities.none
+@export var power: global.abilities = global.abilities.none:
+  set(value):
+    power = value
+    # Only run this inside the editor or if the node is fully ready
+    if is_inside_tree():
+      update_power_visuals()
+
+@export var icons: Array[Node]
 
 # thrown by player
 const SPEED = 120
@@ -20,6 +28,10 @@ func _ready() -> void:
     $icons.rotate_z(-90)
     $base.rotate_z(-90)
     $Area3D.rotate_z(-90)
+  update_power_visuals()
+
+func update_power_visuals():
+  hideall()
   shownode(power)
 
 func _physics_process(delta: float) -> void:
@@ -32,14 +44,12 @@ func _physics_process(delta: float) -> void:
   else:
     rotate_y(delta * 5)
 
-
 func hideall():
-  for i in get_node("icons").get_child_count():
-    get_node("icons").get_child(i).visible = false
+  for icon in icons:
+    icon.visible = false
 
 func shownode(i):
-  get_node("icons").get_node(str(i)).visible = true
-
+  icons[i].visible = true
 
 func _on_area_3d_body_entered(body: Node3D) -> void:
   if !visible: return
@@ -51,11 +61,9 @@ func _on_area_3d_body_entered(body: Node3D) -> void:
     await get_tree().create_timer(4.0).timeout
     visible = true
 
-
 func _on_timer_timeout():
   if isthrown:
     queue_free.call_deferred()
-
 
 func _on_blockcollision_body_entered(body: Node3D):
   if isthrown:

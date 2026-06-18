@@ -202,9 +202,10 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_t3uh6")
 
-[node name="powers" type="Node3D" unique_id=2026949783]
-transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+[node name="powers" type="Node3D" unique_id=2026949783 node_paths=PackedStringArray("icons")]
+transform = Transform3D(0.39995202, 0, 0.0026700571, 0, 0.4, 0, -0.0026700571, 0, 0.39995202, 0, 0, 0)
 script = ExtResource("1_1mmx5")
+icons = [NodePath("icons/0"), NodePath("icons/1"), NodePath("icons/2")]
 
 [node name="base" type="MeshInstance3D" parent="." unique_id=1652149164]
 transform = Transform3D(-6.51231e-08, 1, 0, -1.48984, -4.37114e-08, 0, 0, 0, 1.16568, 0, 0, 0)
@@ -228,6 +229,7 @@ shape = SubResource("CylinderShape3D_u1whu")
 
 [node name="1" type="Node3D" parent="icons" unique_id=1873893941]
 transform = Transform3D(-3.93403e-08, 0.178968, 0, -0.9, -7.82293e-09, 0, 0, 0, 0.9, 0, 0, 0)
+visible = false
 
 [node name="1" type="MeshInstance3D" parent="icons/1" unique_id=248216522]
 cast_shadow = 0
@@ -236,6 +238,7 @@ surface_material_override/0 = ExtResource("2_dpomo")
 
 [node name="2" type="Node3D" parent="icons" unique_id=920292481]
 transform = Transform3D(-3.93403e-08, 0.178968, 0, -0.9, -7.82293e-09, 0, 0, 0, 0.9, 0, 0, 0)
+visible = false
 
 [node name="Cube_001" type="MeshInstance3D" parent="icons/2" unique_id=1756927866]
 transform = Transform3D(-6.55671e-09, -0.428968, -4.9831e-08, 0, -1.87508e-08, 1.14, -0.15, 1.87508e-08, 2.17818e-15, 0, 0, 0)

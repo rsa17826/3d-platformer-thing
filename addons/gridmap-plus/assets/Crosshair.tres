@@ -1,7 +1,7 @@
-[gd_resource type="SpriteFrames" load_steps=16 format=3 uid="uid://co6upwluq672f"]
+[gd_resource type="SpriteFrames" format=3 uid="uid://co6upwluq672f"]
 
-[ext_resource type="Texture2D" uid="uid://5anenb7wdrd4" path="res://addons/gridmap-plus/assets/crosshair.png" id="1_1au0e"]
-[ext_resource type="Texture2D" uid="uid://dlmas1bqktrc2" path="res://addons/gridmap-plus/assets/percentage.png" id="2_1putu"]
+[ext_resource type="Texture2D" uid="uid://vkjbx4ffa8f4" path="res://addons/gridmap-plus/assets/crosshair.png" id="1_1au0e"]
+[ext_resource type="Texture2D" uid="uid://qcpxy43b7fhv" path="res://addons/gridmap-plus/assets/percentage.png" id="2_1putu"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ivgpl"]
 atlas = ExtResource("1_1au0e")
@@ -61,7 +61,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_ivgpl")
 }],
-"loop": false,
+"loop": 0,
 "name": &"default",
 "speed": 5.0
 }, {
@@ -102,7 +102,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_agxgh")
 }],
-"loop": false,
+"loop": 0,
 "name": &"place",
 "speed": 13.0
 }]
