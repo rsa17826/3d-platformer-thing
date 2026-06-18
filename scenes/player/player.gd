@@ -1,6 +1,5 @@
 extends CharacterBody3D
 
-
 const USER_MOVE_SPEED = 8.5
 const USER_MOVE_SPEED_ICE = 13
 var CURRENT_USER_MOVE_SPEED = 0
@@ -23,7 +22,8 @@ func ends_with(x, y):
   return x.substr(len(x) - len(y)) == y
 
 func _process(_delta):
-  MOUSE_SENSITIVITY = float((Config.get_config("InputSettings", "MouseSensitivity", 3))) / 1000
+  MOUSE_SENSITIVITY = 0.005
+  # MOUSE_SENSITIVITY = float((Config.get_config("InputSettings", "MouseSensitivity", 3))) / 1000
   if inmenu or inbeforelevelstart: return
   if !global.timer.time:
     if Input.is_action_just_pressed("next level"): return
@@ -62,7 +62,6 @@ var speed := {
   "dashbounce": Vector3.ZERO,
 }
 
-
 var trypress = {
   "jump": 0,
   "dash": 0
@@ -95,7 +94,6 @@ func power_got():
     candash = false
 
 const cardtscn = preload("res://scenes/powers/cards.tscn")
-
 
 func _input(event):
   if Input.is_action_just_pressed("throw card") and global.player_ability != global.abilities.none:
@@ -149,10 +147,9 @@ func _input(event):
     if $cam.rotation_degrees.x > cap:
       $cam.rotation_degrees.x = cap
     if $cam.rotation_degrees.x < -cap:
-      $cam.rotation_degrees.x = -cap
+      $cam.rotation_degrees.x = - cap
     $fake_cam.rotation = $cam.rotation
     $fake_cam.rotation.x = 0
-
 
 func _physics_process(delta: float) -> void:
   if inmenu or inbeforelevelstart: return
@@ -164,7 +161,6 @@ func _physics_process(delta: float) -> void:
   if global.player_ability == global.abilities.extrajump:
     has2.append("jump")
   updatetrypress(has2, delta)
-
 
   if is_on_floor():
     kt = MAX_KT
@@ -190,7 +186,6 @@ func _physics_process(delta: float) -> void:
         speed.user.y = JUMP_SPEED
         unpress("jump")
         jumps -= 1
-
 
   # if boosting <= 0:
   var input_dir := Input.get_vector("left", "right", "forward", "back")

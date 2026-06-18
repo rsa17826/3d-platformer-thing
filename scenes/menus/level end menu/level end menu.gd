@@ -18,10 +18,10 @@ func _ready():
     newbesttimes[levelstr] = global.timer.time
 
   if prevtime == INF:
-      $vbox/timertext.text = global.join("",
-      "beat the level with TIME OF: ",
-      global.timer.format(),
-      )
+    $vbox/timertext.text = global.join("",
+    "beat the level with TIME OF: ",
+    global.timer.format(),
+    )
   else:
     if justgotnewbesttime:
       $vbox/timertext.text = global.join("",
@@ -39,7 +39,6 @@ func _ready():
       "\noff of new best by: \n",
       global.timer.format(global.timer.time - prevtime)
       )
-
 
   global.file.write(global.filepath.besttimes, newbesttimes)
 

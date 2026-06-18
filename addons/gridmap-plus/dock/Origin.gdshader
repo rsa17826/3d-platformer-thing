@@ -7,7 +7,7 @@ shader_type spatial;
 render_mode blend_mix, cull_disabled, unshaded, fog_disabled;
 
 void vertex() {
-	vec3 point_a = MODEL_MATRIX[3].xyz;
+  3 point_a = MODEL_MATRIX[3].xyz;
 	// Encoded in scale.
 	vec3 point_b = vec3(MODEL_MATRIX[0].x, MODEL_MATRIX[1].y, MODEL_MATRIX[2].z);
 

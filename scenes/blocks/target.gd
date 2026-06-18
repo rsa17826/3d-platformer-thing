@@ -12,7 +12,6 @@ func _on_area_entered(area: Area3D):
     #   if node.id==self.id:
     #     queue_free()
     #     return
-
     # for node in get_tree().get_nodes_in_group("doors"):
     #   if node.id==self.id:
     #     node.queue_free()
